@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Алексей Просвиров](https://up.htmlacademy.ru/javascript/15/user/865409).
-* Наставник: `Неизвестно`.
+* Наставник: `Андрей Дос`.
 
 ---
 
