@@ -2,9 +2,12 @@
 
 var map = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
+var adSubmit = document.querySelector('.ad-form__submit');
 var mainPin = document.querySelector('.map__pin--main');
 var pinElements = document.querySelector('.map__pins');
-var inputAddress = document.querySelector('#address');
+var inputAddress = adForm.querySelector('#address');
+var roomsSelect = adForm.querySelector('#room_number');
+var guestsSelect = adForm.querySelector('#capacity');
 
 var apartmentTitles = [
   'Большая уютная квартира',
@@ -154,8 +157,9 @@ var pinTemplate = document.querySelector('#pin')
 var createPin = function (data) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.style = 'left: ' + (data.location.x - PIN_WIDTH) + 'px; top: ' + (data.location.y - PIN_HEIGHT) + 'px;';
-  pinElement.querySelector('img').src = data.author.avatar;
-  pinElement.querySelector('img').alt = data.offer.title;
+  var pinPhoto = pinElement.querySelector('img');
+  pinPhoto.src = data.author.avatar;
+  pinPhoto.alt = data.offer.title;
   pinElement.addEventListener('click', function () {
     closeCard();
     renderCard(data);
@@ -231,10 +235,11 @@ var closeCard = function () {
 };
 
 
-for (var i = 0; i < adForm.length; i += 1) {
-  adForm[i].disabled = true;
-}
-
+// for (var i = 0; i < adForm.length; i += 1) {
+//   adForm[i].disabled = true;
+// }
+map.classList.remove('map--faded');
+adForm.classList.remove('ad-form--disabled');
 var activateMap = function () {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
@@ -252,3 +257,19 @@ var fillAddress = function () {
   inputAddress.value = Math.round((mainPin.offsetTop + MAIN_PIN_HEIGHT)) + ', ' + Math.round((mainPin.offsetLeft + MAIN_PIN_WIDTH / 2));
 };
 fillAddress();
+
+var checkRoomsCapacity = function () {
+  if (roomsSelect.value === '1' && guestsSelect.value !== '1') {
+    guestsSelect.setCustomValidity('Не больше 1 гостя');
+  } else if (roomsSelect.value === '2' && guestsSelect.value !== '2' && guestsSelect.value !== '1') {
+    guestsSelect.setCustomValidity('Не больше 2 гостей');
+  } else if (roomsSelect.value === '3' && guestsSelect.value !== '3' && guestsSelect.value !== '2' && guestsSelect.value !== '1') {
+    guestsSelect.setCustomValidity('Не больше 3 гостей');
+  } else if (roomsSelect.value === '100' && guestsSelect.value !== '0') {
+    guestsSelect.setCustomValidity('100 мест не для гостей');
+  } else {
+    guestsSelect.setCustomValidity('');
+  }
+};
+
+adSubmit.addEventListener('click', checkRoomsCapacity);
