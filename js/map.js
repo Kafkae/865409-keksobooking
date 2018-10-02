@@ -9,6 +9,7 @@ var inputAddress = adForm.querySelector('#address');
 var roomsSelect = adForm.querySelector('#room_number');
 var guestsSelect = adForm.querySelector('#capacity');
 
+
 var apartmentTitles = [
   'Большая уютная квартира',
   'Маленькая неуютная квартира',
@@ -157,9 +158,8 @@ var pinTemplate = document.querySelector('#pin')
 var createPin = function (data) {
   var pinElement = pinTemplate.cloneNode(true);
   pinElement.style = 'left: ' + (data.location.x - PIN_WIDTH) + 'px; top: ' + (data.location.y - PIN_HEIGHT) + 'px;';
-  var pinPhoto = pinElement.querySelector('img');
-  pinPhoto.src = data.author.avatar;
-  pinPhoto.alt = data.offer.title;
+  pinElement.querySelector('img').src = data.author.avatar;
+  pinElement.querySelector('img').alt = data.offer.title;
   pinElement.addEventListener('click', function () {
     closeCard();
     renderCard(data);
@@ -235,11 +235,10 @@ var closeCard = function () {
 };
 
 
-// for (var i = 0; i < adForm.length; i += 1) {
-//   adForm[i].disabled = true;
-// }
-map.classList.remove('map--faded');
-adForm.classList.remove('ad-form--disabled');
+for (var i = 0; i < adForm.length; i += 1) {
+  adForm[i].disabled = true;
+}
+
 var activateMap = function () {
   map.classList.remove('map--faded');
   adForm.classList.remove('ad-form--disabled');
