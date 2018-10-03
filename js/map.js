@@ -2,12 +2,9 @@
 
 var map = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
-var adSubmit = document.querySelector('.ad-form__submit');
 var mainPin = document.querySelector('.map__pin--main');
 var pinElements = document.querySelector('.map__pins');
 var inputAddress = adForm.querySelector('#address');
-var roomsSelect = adForm.querySelector('#room_number');
-var guestsSelect = adForm.querySelector('#capacity');
 
 
 var apartmentTitles = [
@@ -226,14 +223,12 @@ var renderCard = function (card) {
   map.insertBefore(fragment, document.querySelector('.map__filters-container'));
 };
 
-
 var closeCard = function () {
   var card = document.querySelector('.map__card');
   if (card) {
     card.remove();
   }
 };
-
 
 for (var i = 0; i < adForm.length; i += 1) {
   adForm[i].disabled = true;
@@ -257,18 +252,26 @@ var fillAddress = function () {
 };
 fillAddress();
 
+var roomsSelect = adForm.querySelector('#room_number');
+var guestsSelect = adForm.querySelector('#capacity');
+
 var checkRoomsCapacity = function () {
-  if (roomsSelect.value === '1' && guestsSelect.value !== '1') {
+  var roomsSelectValue = parseInt(roomsSelect.value, 10);
+  var guestsSelectValue = parseInt(guestsSelect.value, 10);
+
+
+  if (roomsSelectValue === 1 && guestsSelectValue !== 1) {
     guestsSelect.setCustomValidity('Не больше 1 гостя');
-  } else if (roomsSelect.value === '2' && guestsSelect.value !== '2' && guestsSelect.value !== '1') {
+  } else if (roomsSelectValue === 2 && guestsSelectValue !== 2 && guestsSelectValue !== 1) {
     guestsSelect.setCustomValidity('Не больше 2 гостей');
-  } else if (roomsSelect.value === '3' && guestsSelect.value !== '3' && guestsSelect.value !== '2' && guestsSelect.value !== '1') {
+  } else if (roomsSelectValue === 3 && guestsSelectValue !== 3 && guestsSelectValue !== 2 && guestsSelectValue !== 1) {
     guestsSelect.setCustomValidity('Не больше 3 гостей');
-  } else if (roomsSelect.value === '100' && guestsSelect.value !== '0') {
+  } else if (roomsSelectValue === 100 && guestsSelectValue !== 0) {
     guestsSelect.setCustomValidity('100 мест не для гостей');
   } else {
     guestsSelect.setCustomValidity('');
   }
 };
 
-adSubmit.addEventListener('click', checkRoomsCapacity);
+roomsSelect.addEventListener('change', checkRoomsCapacity);
+guestsSelect.addEventListener('change', checkRoomsCapacity);
