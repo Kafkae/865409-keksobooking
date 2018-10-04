@@ -5,7 +5,7 @@ var adForm = document.querySelector('.ad-form');
 var mainPin = document.querySelector('.map__pin--main');
 var pinElements = document.querySelector('.map__pins');
 var inputAddress = adForm.querySelector('#address');
-
+var adFormSubmit = adForm.querySelector('.ad-form__submit');
 
 var apartmentTitles = [
   'Большая уютная квартира',
@@ -275,3 +275,5 @@ var checkRoomsCapacity = function () {
 
 roomsSelect.addEventListener('change', checkRoomsCapacity);
 guestsSelect.addEventListener('change', checkRoomsCapacity);
+
+adFormSubmit.addEventListener('click', checkRoomsCapacity);
