@@ -4,7 +4,8 @@ var map = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
 var mainPin = document.querySelector('.map__pin--main');
 var pinElements = document.querySelector('.map__pins');
-var inputAddress = document.querySelector('#address');
+var inputAddress = adForm.querySelector('#address');
+var adFormSubmit = adForm.querySelector('.ad-form__submit');
 
 var apartmentTitles = [
   'Большая уютная квартира',
@@ -222,14 +223,12 @@ var renderCard = function (card) {
   map.insertBefore(fragment, document.querySelector('.map__filters-container'));
 };
 
-
 var closeCard = function () {
   var card = document.querySelector('.map__card');
   if (card) {
     card.remove();
   }
 };
-
 
 for (var i = 0; i < adForm.length; i += 1) {
   adForm[i].disabled = true;
@@ -252,3 +251,29 @@ var fillAddress = function () {
   inputAddress.value = Math.round((mainPin.offsetTop + MAIN_PIN_HEIGHT)) + ', ' + Math.round((mainPin.offsetLeft + MAIN_PIN_WIDTH / 2));
 };
 fillAddress();
+
+var roomsSelect = adForm.querySelector('#room_number');
+var guestsSelect = adForm.querySelector('#capacity');
+
+var checkRoomsCapacity = function () {
+  var roomsSelectValue = parseInt(roomsSelect.value, 10);
+  var guestsSelectValue = parseInt(guestsSelect.value, 10);
+
+
+  if (roomsSelectValue === 1 && guestsSelectValue !== 1) {
+    guestsSelect.setCustomValidity('Не больше 1 гостя');
+  } else if (roomsSelectValue === 2 && guestsSelectValue !== 2 && guestsSelectValue !== 1) {
+    guestsSelect.setCustomValidity('Не больше 2 гостей');
+  } else if (roomsSelectValue === 3 && guestsSelectValue !== 3 && guestsSelectValue !== 2 && guestsSelectValue !== 1) {
+    guestsSelect.setCustomValidity('Не больше 3 гостей');
+  } else if (roomsSelectValue === 100 && guestsSelectValue !== 0) {
+    guestsSelect.setCustomValidity('100 мест не для гостей');
+  } else {
+    guestsSelect.setCustomValidity('');
+  }
+};
+
+roomsSelect.addEventListener('change', checkRoomsCapacity);
+guestsSelect.addEventListener('change', checkRoomsCapacity);
+
+adFormSubmit.addEventListener('click', checkRoomsCapacity);
