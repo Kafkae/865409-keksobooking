@@ -45,6 +45,13 @@ var Rooms = {
   max: 5
 };
 
+var LimitsCoord = {
+  minY: 130,
+  maxY: 630,
+  minX: 0,
+  maxX: 1200
+};
+
 var Guests = {
   min: 1,
   max: 10
@@ -277,3 +284,46 @@ roomsSelect.addEventListener('change', checkRoomsCapacity);
 guestsSelect.addEventListener('change', checkRoomsCapacity);
 
 adFormSubmit.addEventListener('click', checkRoomsCapacity);
+
+mainPin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    var topPosEnd = mainPin.offsetTop - shift.y;
+    if (LimitsCoord.minY <= topPosEnd && topPosEnd <= LimitsCoord.maxY - MAIN_PIN_HEIGHT) {
+      mainPin.style.top = topPosEnd + 'px';
+    }
+    var leftPosEnd = mainPin.offsetLeft - shift.x;
+    if (LimitsCoord.minX <= leftPosEnd && leftPosEnd <= LimitsCoord.maxX - MAIN_PIN_WIDTH) {
+      mainPin.style.left = leftPosEnd + 'px';
+    }
+
+    inputAddress.value = Math.round(topPosEnd + MAIN_PIN_WIDTH / 2) + ', ' + (Math.round(leftPosEnd + MAIN_PIN_HEIGHT));
+  };
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
