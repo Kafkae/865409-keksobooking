@@ -306,16 +306,28 @@ mainPin.addEventListener('mousedown', function (evt) {
       y: moveEvt.clientY
     };
 
-    var topPosEnd = mainPin.offsetTop - shift.y;
-    if (LimitsCoord.minY <= topPosEnd && topPosEnd <= LimitsCoord.maxY - MAIN_PIN_HEIGHT) {
-      mainPin.style.top = topPosEnd + 'px';
-    }
     var leftPosEnd = mainPin.offsetLeft - shift.x;
-    if (LimitsCoord.minX <= leftPosEnd && leftPosEnd <= LimitsCoord.maxX - MAIN_PIN_WIDTH) {
-      mainPin.style.left = leftPosEnd + 'px';
-    }
+    var topPosEnd = mainPin.offsetTop - shift.y;
 
-    inputAddress.value = Math.round(topPosEnd + MAIN_PIN_WIDTH / 2) + ', ' + (Math.round(leftPosEnd + MAIN_PIN_HEIGHT));
+    if (LimitsCoord.minX - MAIN_PIN_WIDTH / 2 >= leftPosEnd) {
+      leftPosEnd = LimitsCoord.minX - MAIN_PIN_WIDTH / 2 + 'px';
+    } else if (LimitsCoord.maxX - MAIN_PIN_WIDTH / 2 <= leftPosEnd) {
+      leftPosEnd = LimitsCoord.maxX - MAIN_PIN_WIDTH / 2 + 'px';
+    } else {
+      leftPosEnd = leftPosEnd + 'px';
+    }
+    mainPin.style.left = leftPosEnd;
+
+    if (LimitsCoord.minY - MAIN_PIN_WIDTH >= topPosEnd) {
+      topPosEnd = LimitsCoord.minY - MAIN_PIN_WIDTH + 'px';
+    } else if (LimitsCoord.maxY - MAIN_PIN_WIDTH <= topPosEnd) {
+      topPosEnd = LimitsCoord.maxY - MAIN_PIN_WIDTH + 'px';
+    } else {
+      topPosEnd = topPosEnd + 'px';
+    }
+    mainPin.style.top = topPosEnd;
+
+    fillAddress();
   };
   var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
