@@ -92,5 +92,4 @@
   };
 
   mapFilter.addEventListener('change', onFilterChange);
-
 })();
