@@ -3,8 +3,17 @@
 (function () {
   var map = document.querySelector('.map');
   var adForm = document.querySelector('.ad-form');
+  var mapPin = document.querySelector('.map__pin');
   var mainPin = document.querySelector('.map__pin--main');
-  var inputAddress = adForm.querySelector('#address');
+  var inputAddress = document.querySelector('#address');
+  var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  var main = document.querySelector('main');
+  var successTemplate = document.querySelector('#success')
+  .content
+  .querySelector('.success');
+  var errorTemplate = document.querySelector('#error')
+  .content
+  .querySelector('.error');
 
   var MAIN_PIN_HEIGHT = 65;
   var MAIN_PIN_WIDTH = 65;
@@ -15,23 +24,6 @@
     minX: 0,
     maxX: 1200
   };
-
-  for (var i = 0; i < adForm.length; i += 1) {
-    adForm[i].disabled = true;
-  }
-
-  var activateMap = function () {
-    map.classList.remove('map--faded');
-    adForm.classList.remove('ad-form--disabled');
-    for (var j = 0; j < adForm.length; j += 1) {
-      adForm[j].disabled = false;
-    }
-    window.pin.renderPin();
-  };
-
-  mainPin.addEventListener('mouseup', function () {
-    activateMap();
-  });
 
   var fillAddress = function () {
     inputAddress.value = Math.round((mainPin.offsetTop + MAIN_PIN_HEIGHT)) + ', ' + Math.round((mainPin.offsetLeft + MAIN_PIN_WIDTH / 2));
@@ -93,10 +85,64 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
+  for (var i = 0; i < adForm.length; i += 1) {
+    adForm[i].disabled = true;
+  }
+
+  var activateMap = function () {
+    map.classList.remove('map--faded');
+    adForm.classList.remove('ad-form--disabled');
+    for (var j = 0; j < adForm.length; j += 1) {
+      adForm[j].disabled = false;
+    }
+    window.backend.load(window.pin.renderPin, onError);
+  };
+
+  mainPin.addEventListener('mouseup', function () {
+    activateMap();
+  });
+
+  var onError = function (errorText) {
+    var errorElement = errorTemplate.cloneNode(true);
+    var errorMessage = errorTemplate.querySelector('.error__message');
+    errorMessage.textContent = errorText;
+    main.appendChild(errorElement);
+    document.addEventListener('keydown', closeError);
+    errorElement.addEventListener('click', closeError);
+  };
+  var getSuccess = function () {
+    var successElement = successTemplate.cloneNode(true);
+    successElement.addEventListener('mousedown', closeSuccess);
+    main.appendChild(successElement);
+    document.addEventListener('keydown', closeSuccess);
+  };
+
+  var closeSuccess = function () {
+    var successElement = document.querySelector('.success');
+    main.removeChild(successElement);
+    document.removeEventListener('keydown', closeSuccess);
+  };
+
+  var closeError = function () {
+    var errorElement = document.querySelector('.error');
+    main.removeChild(errorElement);
+    document.removeEventListener('keydown', closeError);
+    errorElement.removeEventListener('click', closeError);
+  };
+
   window.map = {
+    mapPin: mapPin,
+    mapKeks: map,
+    adress: inputAddress,
+    adForm: adForm,
+    mainPin: mainPin,
+    main: main,
     mainPinHeight: MAIN_PIN_HEIGHT,
     mainPinWidth: MAIN_PIN_WIDTH,
-    mapKeks: map,
-    adForm: adForm
+    map: map,
+    mapPins: mapPins,
+    getSuccess: getSuccess,
+    onError: onError,
+    closeError: closeError,
   };
 })();

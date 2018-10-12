@@ -18,10 +18,11 @@
     return pinElement;
   };
 
+
   var renderPin = function () {
     var frag = document.createDocumentFragment();
-    for (var i = 0; i < window.data.adv.length; i++) {
-      frag.appendChild(createPin(window.data.adv[i]));
+    for (var i = 0; i < 8; i++) {
+      frag.appendChild(createPin(window.ads[i]));
     }
     pinElements.appendChild(frag);
   };
