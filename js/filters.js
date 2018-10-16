@@ -1,95 +1,67 @@
 'use strict';
+
 (function () {
+  var filterPin = function (adv) {
+    var FILTER_PRICE_MIN = 10000;
+    var FILTER_PRICE_MAX = 50000;
+    var selectPins = adv.slice();
+    var filters = document.querySelector('.map__filters');
+    var selects = filters.querySelectorAll('select');
+    var features = filters.querySelectorAll('input[type = checkbox]:checked');
+    window.filtersFeat = filters;
 
-  var mapFilter = document.querySelector('.map__filters');
-  var filterType = document.querySelector('#housing-type');
-  var filterPrice = document.querySelector('#housing-price');
-  var filterRooms = document.querySelector('#housing-rooms');
-  var filterGuests = document.querySelector('#housing-guests');
-  var filterFeaturesElements = document.querySelectorAll('.map__checkbox');
-  var selectedFeatures = [];
+    var FilterSet = {
+      'housing-type': 'type',
+      'housing-rooms': 'rooms',
+      'housing-guests': 'guests'
+    };
 
-  var DEBOUNCE_INTERVAL = 500;
-  var lastTimeout;
-  var debounce = function (fun) {
-    if (lastTimeout) {
-      window.clearTimeout(lastTimeout);
+    var filterByValue = function (element, property) {
+      return selectPins.filter(function (data) {
+        return data.offer[property].toString() === element.value;
+      });
+    };
+
+    var filterByPrice = function (filterPrice) {
+      return selectPins.filter(function (data) {
+        var filterPriceValue = {
+          'min': data.offer.price <= FILTER_PRICE_MIN,
+          'middle': data.offer.price >= FILTER_PRICE_MIN && data.offer.price <= FILTER_PRICE_MAX,
+          'over': data.offer.price >= FILTER_PRICE_MAX
+        };
+        return filterPriceValue[filterPrice.value];
+      });
+    };
+
+    var filterByFeatures = function (element) {
+      return selectPins.filter(function (data) {
+        return data.offer.features.indexOf(element.value) === -1;
+      });
+    };
+
+    if (selects.length !== undefined) {
+      selects.forEach(function (element) {
+        if (element.value !== 'any') {
+          if (element.id !== 'housing-price') {
+            selectPins = filterByValue(element, FilterSet[element.id]);
+          } else {
+            selectPins = filterByPrice(element);
+          }
+        }
+      });
     }
-    lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
-  };
 
-  var hoisePrice = {
-    'low': {
-      minPrice: 0,
-      maxPrice: 10000
-    },
-    'middle': {
-      minPrice: 10000,
-      maxPrice: 50000
-    },
-    'high': {
-      minPrice: 50000,
-      maxPrice: Infinity
+    if (features !== undefined) {
+      features.forEach(function (element) {
+        selectPins = filterByFeatures(element);
+      });
+    }
+
+    if (selectPins.length) {
+      window.pin.renderPin(selectPins);
     }
   };
-
-  var getFilterType = function (adv, filterElem) {
-    if (filterElem.value === 'any') {
-      return true;
-    }
-    return adv.offer.type === filterElem.value;
+  window.filter = {
+    filterPin: filterPin,
   };
-  var getFilterRooms = function (adv, filterElem) {
-    if (filterElem.value === 'any') {
-      return true;
-    }
-    return adv.offer.rooms === Number(filterElem.value);
-  };
-  var getFilterGuests = function (adv, filterElem) {
-    if (filterElem.value === 'any') {
-      return true;
-    }
-    return adv.offer.guests === Number(filterElem.value);
-  };
-
-  var getPrices = function (ads, filterElem) {
-    if (filterElem.value === 'any') {
-      return true;
-    }
-    var minPrice = hoisePrice[filterElem.value].minPrice;
-    var maxPrice = hoisePrice[filterElem.value].maxPrice;
-    return ads.offer.price >= minPrice && ads.offer.price <= maxPrice;
-  };
-
-  var getFilterFeatures = function (adv) {
-    var where = adv.offer.features;
-    var what = selectedFeatures;
-    for (var i = 0; i < what.length; i++) {
-      if (where.indexOf(what[i]) === -1) {
-        return false;
-      }
-    }
-    return true;
-  };
-
-  var onFilterChange = function () {
-    selectedFeatures = [];
-    filterFeaturesElements.forEach(function (cur) {
-      if (cur.checked) {
-        selectedFeatures.push(cur.value);
-      }
-    });
-    var filtersAds = window.ads.filter(function (data) {
-      var adType = getFilterType(data, filterType);
-      var adRooms = getFilterRooms(data, filterRooms);
-      var adPrice = getPrices(data, filterPrice);
-      var adGuests = getFilterGuests(data, filterGuests);
-      var adFeatures = getFilterFeatures(data);
-      return adType && adRooms && adPrice && adGuests && adFeatures;
-    });
-    window.ads = filtersAds;
-    debounce(window.pin.renderPin);
-  };
-
-  mapFilter.addEventListener('change', onFilterChange);
 })();

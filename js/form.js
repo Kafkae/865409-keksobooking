@@ -59,9 +59,12 @@
 
   var onReset = function () {
     window.map.adForm.reset();
-    for (var i = 0; i < window.map.adForm.length; i += 1) {
-      window.map.adForm[i].disabled = true;
-    }
+    window.filtersFeat.reset();
+    [].forEach.call(window.map.adForm, function (element) {
+      element.disabled = true;
+    });
+    window.map.fillAddress();
+    window.map.onActive();
     window.map.mapKeks.classList.add('map--faded');
     window.map.adForm.classList.add('ad-form--disabled');
     if (window.map.card) {
@@ -70,17 +73,17 @@
     window.card.closeCard();
     var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     var wrapper = document.querySelector('.map__pins');
-    for (var p = 0; p < pins.length; p++) {
-      wrapper.removeChild(pins[p]);
-    }
+    [].forEach.call(pins, function (element) {
+      wrapper.removeChild(element);
+    });
     window.map.mainPin.style.top = MainPinCoords.CoordTop;
     window.map.mainPin.style.left = MainPinCoords.CoordLeft;
   };
 
   var onSubmit = function () {
-    window.backend.upload(new FormData(window.map.adForm), onSubmit, window.map.onError);
-    onReset();
+    window.backend.upload(new FormData(window.map.adForm), window.map.onSuccess, window.map.onError);
   };
+
   roomsSelect.addEventListener('change', checkRoomsCapacity);
   guestsSelect.addEventListener('change', checkRoomsCapacity);
 
@@ -95,6 +98,7 @@
 
   window.map.adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.map.getSuccess();
+    onSubmit();
+    onReset();
   });
 })();

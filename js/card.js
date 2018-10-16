@@ -11,17 +11,22 @@
   };
   var renderPhotos = function (photo) {
     var photosFragment = document.createDocumentFragment();
-    for (var i = 0; i < photo.length; i++) {
+    photo.forEach(function (element) {
       var photosTemplate = document
         .querySelector('#card')
         .content
         .querySelector('.popup__photos');
       var photosElement = photosTemplate.cloneNode(true);
-      photosElement.querySelector('img').src = photo[i];
-      photosElement.querySelector('img').height = 60;
-      photosElement.querySelector('img').width = 60;
+      var PhotoSize = {
+        width: 60,
+        height: 60
+      };
+      photosElement.querySelector('img').src = element;
+      photosElement.querySelector('img').height = PhotoSize.height;
+      photosElement.querySelector('img').width = PhotoSize.width;
       photosFragment.appendChild(photosElement);
-    }
+    });
+
     return photosFragment;
   };
 
@@ -39,9 +44,9 @@
     cardElement.querySelector('.popup__text--capacity').textContent = mapCard.offer.rooms + ' комнаты для ' + mapCard.offer.guests + ' гостей';
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + mapCard.offer.checkin + ', выезд до ' + mapCard.offer.checkout;
     cardElement.querySelector('.popup__features').textContent = '';
-    for (var i = 0; i < mapCard.offer.features.length; i++) {
-      cardElement.querySelector('.popup__features').insertAdjacentHTML('beforeend', '<li class="popup__feature popup__feature--' + mapCard.offer.features[i] + '"></li>');
-    } cardElement.querySelector('.popup__description').textContent = mapCard.offer.description;
+    mapCard.offer.features.forEach(function (element) {
+      cardElement.querySelector('.popup__features').insertAdjacentHTML('beforeend', '<li class="popup__feature popup__feature--' + element + '"></li>');
+    }); cardElement.querySelector('.popup__description').textContent = mapCard.offer.description;
     cardElement.querySelector('.popup__photos').textContent = '';
     cardElement.querySelector('.popup__photos').appendChild(renderPhotos(mapCard.offer.photos));
 

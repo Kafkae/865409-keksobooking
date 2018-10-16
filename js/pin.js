@@ -18,20 +18,18 @@
     return pinElement;
   };
 
-
   var fragment = document.createDocumentFragment();
-  var renderPin = function () {
+  var renderPin = function (adv) {
     var allPins = document.querySelectorAll('button.map__pin:not(.map__pin--main)');
     allPins.forEach(function (item) {
       item.remove();
     });
-    for (var i = 0; i < PINS_COUNT; i++) {
-      if (window.ads[i]) {
-        fragment.appendChild(createPin(window.ads[i], i));
-      }
-    }
+    adv.slice(0, PINS_COUNT).forEach(function (element) {
+      mapPins.appendChild(createPin(element));
+    });
     mapPins.appendChild(fragment);
   };
+
   window.pin = {
     renderPin: renderPin
   };
