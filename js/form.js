@@ -22,7 +22,7 @@
     });
     setTimeout(function () {
       window.map.fillAddress();
-    },1);
+    }, 1);
     window.map.onActive();
     window.map.mapKeks.classList.add('map--faded');
     window.map.adForm.classList.add('ad-form--disabled');
