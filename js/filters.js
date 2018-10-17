@@ -2,14 +2,14 @@
 
 (function () {
   var filters = document.querySelector('.map__filters');
-  var selects = filters.querySelectorAll('select');
-  var features = filters.querySelectorAll('input[type = checkbox]:checked');
+  window.filtersFeat = filters;
+
   var filterPin = function (adv) {
     var FILTER_PRICE_MIN = 10000;
     var FILTER_PRICE_MAX = 50000;
+    var selects = filters.querySelectorAll('select');
+    var features = filters.querySelectorAll('input[type = checkbox]:checked');
     var selectPins = adv.slice();
-    window.filtersFeat = filters;
-
     var FilterSet = {
       'housing-type': 'type',
       'housing-rooms': 'rooms',
