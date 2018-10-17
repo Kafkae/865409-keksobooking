@@ -5,6 +5,7 @@
   var adForm = document.querySelector('.ad-form');
   var mapPin = document.querySelector('.map__pin');
   var mainPin = document.querySelector('.map__pin--main');
+  var filters = document.querySelector('.map__filters');
   var inputAddress = document.querySelector('#address');
   var mapPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
   var main = document.querySelector('main');
@@ -17,12 +18,17 @@
 
   var MAIN_PIN_HEIGHT = 65;
   var MAIN_PIN_WIDTH = 65;
+  var DELAY = 500;
 
   var LimitsCoord = {
     minY: 130,
     maxY: 630,
     minX: 0,
     maxX: 1200
+  };
+
+  var onActive = function () {
+    mainPin.addEventListener('mousedown', activateMap);
   };
 
   var fillAddress = function () {
@@ -85,22 +91,22 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  for (var i = 0; i < adForm.length; i += 1) {
-    adForm[i].disabled = true;
-  }
+  [].forEach.call(adForm, function (element) {
+    element.disabled = true;
+  });
 
   var activateMap = function () {
     map.classList.remove('map--faded');
     adForm.classList.remove('ad-form--disabled');
-    for (var j = 0; j < adForm.length; j += 1) {
-      adForm[j].disabled = false;
-    }
+    [].forEach.call(adForm, function (element) {
+      element.disabled = false;
+    });
+    mainPin.removeEventListener('mousedown', activateMap);
     window.backend.load(window.pin.renderPin, onError);
+
   };
 
-  mainPin.addEventListener('mouseup', function () {
-    activateMap();
-  });
+  onActive();
 
   var onError = function (errorText) {
     var errorElement = errorTemplate.cloneNode(true);
@@ -110,7 +116,7 @@
     document.addEventListener('keydown', closeError);
     errorElement.addEventListener('click', closeError);
   };
-  var getSuccess = function () {
+  var onSuccess = function () {
     var successElement = successTemplate.cloneNode(true);
     successElement.addEventListener('mousedown', closeSuccess);
     main.appendChild(successElement);
@@ -129,6 +135,26 @@
     document.removeEventListener('keydown', closeError);
     errorElement.removeEventListener('click', closeError);
   };
+  var debounce = function (fun) {
+    var lastTimeout = null;
+    return function () {
+      var args = arguments;
+      if (lastTimeout) {
+        clearTimeout(lastTimeout);
+      }
+      lastTimeout = setTimeout(function () {
+        fun.apply(null, args);
+      }, DELAY);
+    };
+  };
+  var onFilter = function (evt) {
+    evt.preventDefault();
+    window.pin.closePins();
+    window.card.closeCard();
+    window.filter.filterPin(window.ads);
+  };
+
+  filters.addEventListener('change', debounce(onFilter));
 
   window.map = {
     mapPin: mapPin,
@@ -141,8 +167,10 @@
     mainPinWidth: MAIN_PIN_WIDTH,
     map: map,
     mapPins: mapPins,
-    getSuccess: getSuccess,
+    onSuccess: onSuccess,
     onError: onError,
     closeError: closeError,
+    fillAddress: fillAddress,
+    onActive: onActive
   };
 })();
