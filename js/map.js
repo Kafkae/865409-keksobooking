@@ -148,6 +148,8 @@
   };
   var onFilter = function (evt) {
     evt.preventDefault();
+    window.pin.closePins();
+    window.card.closeCard();
     window.filter.filterPin(window.ads);
   };
 

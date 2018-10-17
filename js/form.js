@@ -71,11 +71,6 @@
       window.map.mapKeks.removeChild(window.map.card);
     }
     window.card.closeCard();
-    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    var wrapper = document.querySelector('.map__pins');
-    [].forEach.call(pins, function (element) {
-      wrapper.removeChild(element);
-    });
     window.map.mainPin.style.top = MainPinCoords.CoordTop;
     window.map.mainPin.style.left = MainPinCoords.CoordLeft;
   };

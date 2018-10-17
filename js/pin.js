@@ -30,7 +30,16 @@
     mapPins.appendChild(fragment);
   };
 
+  var closePins = function () {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    var wrapper = document.querySelector('.map__pins');
+    [].forEach.call(pins, function (element) {
+      wrapper.removeChild(element);
+    });
+  };
+
   window.pin = {
-    renderPin: renderPin
+    renderPin: renderPin,
+    closePins: closePins
   };
 })();
