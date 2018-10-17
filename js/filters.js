@@ -1,13 +1,13 @@
 'use strict';
 
 (function () {
+  var filters = document.querySelector('.map__filters');
+  var selects = filters.querySelectorAll('select');
+  var features = filters.querySelectorAll('input[type = checkbox]:checked');
   var filterPin = function (adv) {
     var FILTER_PRICE_MIN = 10000;
     var FILTER_PRICE_MAX = 50000;
     var selectPins = adv.slice();
-    var filters = document.querySelector('.map__filters');
-    var selects = filters.querySelectorAll('select');
-    var features = filters.querySelectorAll('input[type = checkbox]:checked');
     window.filtersFeat = filters;
 
     var FilterSet = {

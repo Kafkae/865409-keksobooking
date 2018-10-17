@@ -103,6 +103,7 @@
     });
     mainPin.removeEventListener('mousedown', activateMap);
     window.backend.load(window.pin.renderPin, onError);
+
   };
 
   onActive();

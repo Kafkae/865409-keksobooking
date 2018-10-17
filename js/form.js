@@ -20,7 +20,9 @@
     [].forEach.call(window.map.adForm, function (element) {
       element.disabled = true;
     });
-    window.map.fillAddress();
+    setTimeout(function () {
+      window.map.fillAddress();
+    },1);
     window.map.onActive();
     window.map.mapKeks.classList.add('map--faded');
     window.map.adForm.classList.add('ad-form--disabled');
