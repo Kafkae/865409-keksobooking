@@ -25,9 +25,9 @@
     var filterByPrice = function (filterPrice) {
       return selectPins.filter(function (data) {
         var filterPriceValue = {
-          'min': data.offer.price <= FILTER_PRICE_MIN,
+          'low': data.offer.price <= FILTER_PRICE_MIN,
           'middle': data.offer.price >= FILTER_PRICE_MIN && data.offer.price <= FILTER_PRICE_MAX,
-          'over': data.offer.price >= FILTER_PRICE_MAX
+          'high': data.offer.price >= FILTER_PRICE_MAX
         };
         return filterPriceValue[filterPrice.value];
       });
