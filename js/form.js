@@ -13,6 +13,24 @@
     CoordTop: '375px',
     CoordLeft: '570px'
   };
+  var onReset = function () {
+    window.map.adForm.reset();
+    window.filtersFeat.reset();
+    window.pin.closePins();
+    [].forEach.call(window.map.adForm, function (element) {
+      element.disabled = true;
+    });
+    window.map.fillAddress();
+    window.map.onActive();
+    window.map.mapKeks.classList.add('map--faded');
+    window.map.adForm.classList.add('ad-form--disabled');
+    if (window.map.card) {
+      window.map.mapKeks.removeChild(window.map.card);
+    }
+    window.card.closeCard();
+    window.map.mainPin.style.top = MainPinCoords.CoordTop;
+    window.map.mainPin.style.left = MainPinCoords.CoordLeft;
+  };
 
   var getPrice = function () {
     if (typeOfHouse.value === 'flat') {
@@ -55,24 +73,6 @@
     } else {
       guestsSelect.setCustomValidity('');
     }
-  };
-
-  var onReset = function () {
-    window.map.adForm.reset();
-    window.filtersFeat.reset();
-    [].forEach.call(window.map.adForm, function (element) {
-      element.disabled = true;
-    });
-    window.map.fillAddress();
-    window.map.onActive();
-    window.map.mapKeks.classList.add('map--faded');
-    window.map.adForm.classList.add('ad-form--disabled');
-    if (window.map.card) {
-      window.map.mapKeks.removeChild(window.map.card);
-    }
-    window.card.closeCard();
-    window.map.mainPin.style.top = MainPinCoords.CoordTop;
-    window.map.mainPin.style.left = MainPinCoords.CoordLeft;
   };
 
   var onSubmit = function () {
